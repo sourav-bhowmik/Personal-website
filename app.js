@@ -1,89 +1,54 @@
-// api.openweathermap.org/data/2.5/weather?q={city name}&appid={your api key}
+// Project : Tanay Padar 
+// Instagram : tanay_30104
 
-const weatherApi = {
-    key: "bab281d79e5f1e9755a68d754cc313e7",
-    baseUrl: "https://api.openweathermap.org/data/2.5/weather", 
-}
-
-const searchInputBox = document.getElementById('input-box');
-
-// Event Listener Function on keypress
-searchInputBox.addEventListener('keypress', (event) => {
+$(document).ready(function(){
     
-    if(event.keyCode == 13) {
-        console.log(searchInputBox.value);
-        getWeatherReport(searchInputBox.value);
-        document.querySelector('.weather-body').style.display = "block";
-    }
-
+    // Page scrolling function for the nav-links
+    $(".nav-link").click(function(){
+        $('html,body').animate({ scrollTop: $(this.hash).offset().top-80 }, 1400);
+        return false;
+    });
+    
+    // Back to Top Link
+    $(".top-link").click(function(){
+        $('html,body').animate({ scrollTop: $("#topSection").offset().top }, 2000);
+        return false;
+    });
+    
+    // Function to change the nav-bar on scroll
+    $(window).scroll(function(){
+        ($(window).scrollTop() >= 110) ? (
+            $('.nav-bar').addClass('scrolled')
+        ) : (
+            $('.nav-bar').removeClass('scrolled')
+        );
+    });
+    
+    // Setting the active nav-link based on the scroll position
+    // There is a better way to do this but this way works so I'll fix it later
+    $(window).scroll(function(){
+        if ($(window).scrollTop() >= $('#contactSection').offset().top - $(window).height()/2 ) {
+            $('.nav-link').removeClass('active');
+            $('#contactLink').addClass('active');
+        } else if ($(window).scrollTop() >= $('#priceSection').offset().top - $(window).height()/2 ) {
+            $('.nav-link').removeClass('active');
+            $('#priceLink').addClass('active');
+        } else if ($(window).scrollTop() >= $('#servicesSection').offset().top - $(window).height()/2 ) {
+            $('.nav-link').removeClass('active');
+            $('#servicesLink').addClass('active');
+        } else if ($(window).scrollTop() >= $('#teamSection').offset().top - $(window).height()/2 ) {
+            $('.nav-link').removeClass('active');
+            $('#teamLink').addClass('active');
+        } else if ($(window).scrollTop() >= $('#portfolioSection').offset().top - $(window).height()/2 ) {
+            $('.nav-link').removeClass('active');
+            $('#portfolioLink').addClass('active');
+        } else if ($(window).scrollTop() >= $('#aboutSection').offset().top - $(window).height()/2 ) {
+            $('.nav-link').removeClass('active');
+            $('#aboutLink').addClass('active');
+        } else if ($(window).scrollTop() >= $('#topSection').offset().top - $(window).height()/2 ) {
+            $('.nav-link').removeClass('active');
+            $('#topLink').addClass('active');
+        }
+    });
+    
 });
-
-// Get Weather Report
-function getWeatherReport(city) {
-    fetch(`${weatherApi.baseUrl}?q=${city}&appid=${weatherApi.key}&units=metric`)
-    .then(weather => {
-        return weather.json();
-    }).then(showWeatherReport);
-}
-
-// Show Weather Report
-function showWeatherReport(weather){
-    console.log(weather);
-
-    let city = document.getElementById('city');
-    city.innerText = `${weather.name}, ${weather.sys.country}`;
-
-    let temperature = document.getElementById('temp');
-    temperature.innerHTML = `${Math.round(weather.main.temp)}&deg;C`;
-
-    let minMaxTemp = document.getElementById('min-max');
-    minMaxTemp.innerHTML = `${Math.floor(weather.main.temp_min)}&deg;C (min)/ ${Math.ceil(weather.main.temp_max)}&deg;C (max) `;
-
-    let weatherType = document.getElementById('weather');
-    weatherType.innerText = `${weather.weather[0].main}`;
-
-    let date = document.getElementById('date');
-    let todayDate = new Date();
-    date.innerText = dateManage(todayDate);
-
-    
-    if(weatherType.textContent == 'Clear') {
-        document.body.style.backgroundImage = "url('images/clear.jpg')";
-        
-    } else if(weatherType.textContent == 'Clouds') {
-
-        document.body.style.backgroundImage = "url('images/cloud.jpg')";
-        
-    } else if(weatherType.textContent == 'Haze') {
-
-        document.body.style.backgroundImage = "url('images/cloud.jpg')";
-        
-    }     else if(weatherType.textContent == 'Rain') {
-        
-        document.body.style.backgroundImage = "url('images/rain.jpg')";
-        
-    } else if(weatherType.textContent == 'Snow') {
-        
-        document.body.style.backgroundImage = "url('images/snow.jpg')";
-    
-    } else if(weatherType.textContent == 'Thunderstorm') {
-    
-        document.body.style.backgroundImage = "url('images/thunderstorm.jpg')";
-        
-    } 
-}
-
-// Date manage
-function dateManage(dateArg) {
-
-    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-    let year = dateArg.getFullYear();
-    let month = months[dateArg.getMonth()];
-    let date = dateArg.getDate();
-    let day = days[dateArg.getDay()];
-
-    return `${date} ${month} (${day}), ${year}`;
-}
